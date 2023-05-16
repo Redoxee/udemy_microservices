@@ -2,6 +2,7 @@ import express from "express";
 import 'express-async-errors';
 import { json } from "body-parser";
 import mongoose from "mongoose";
+import cookieSession from "cookie-session";
 
 import { currentUserRouter } from "./routes/current-users";
 import { signinRouter } from "./routes/signin";
@@ -14,6 +15,13 @@ import { DatabaseConnectionError } from "./errors/database-connection-error";
 
 const app = express();
 app.use(json());
+app.set('trust proxy', true);
+app.use(
+    cookieSession({
+        signed: false,
+        secure: true,
+    })
+);
 
 app.use(signinRouter);
 app.use(signoutRouter);
@@ -24,6 +32,11 @@ app.all('*',()=>{throw new NotFoundError()});
 app.use(errorHandler);
 
 const start = async() => {
+
+    if(!process.env.JWT_KEY) {
+        throw new Error('Missing env secret JWT_KEY');
+    }
+
     try {
         await mongoose.connect("mongodb://auth-mongo-srv:27017/auth");
 
