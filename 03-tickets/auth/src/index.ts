@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { DatabaseConnectionError } from "./errors/database-connection-error";
+import { DatabaseConnectionError } from '@amgtickets/common';
 
 import { app } from './app'
 
@@ -9,8 +9,12 @@ const start = async() => {
         throw new Error('Missing env secret JWT_KEY');
     }
 
+    if(!process.env.MONGO_URI) {
+        throw new Error('Missing env MONGO_URI');
+    }
+
     try {
-        await mongoose.connect("mongodb://auth-mongo-srv:27017/auth");
+        await mongoose.connect(process.env.MONGO_URI);
 
         console.log('Mongodb connection done.')
     } catch(err) {

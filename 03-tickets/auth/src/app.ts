@@ -8,8 +8,8 @@ import { signinRouter } from "./routes/signin";
 import { signoutRouter } from "./routes/signout";
 import { signupRouter } from "./routes/signup";
 
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from "./errors/not-found-error";
+import { errorHandler } from '@amgtickets/common';
+import { NotFoundError } from '@amgtickets/common';
 
 const app = express();
 app.use(json());
