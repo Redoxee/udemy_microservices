@@ -5,7 +5,12 @@ import cookieSession from "cookie-session";
 
 import { errorHandler } from '@amgtickets/common';
 import { NotFoundError } from '@amgtickets/common';
+import { currentUser } from "@amgtickets/common";
+
 import { createTicketRouter } from "./routes/new";
+import { showRouter } from "./routes/show";
+import { indexRouter } from "./routes/index";
+import { updateRouter } from "./routes/update"
 
 const app = express();
 app.use(json());
@@ -17,7 +22,12 @@ app.use(
     })
 );
 
+app.use(currentUser);
+
+app.use(indexRouter);
 app.use(createTicketRouter);
+app.use(showRouter);
+app.use(updateRouter);
 
 app.all('*',()=>{throw new NotFoundError()});
 app.use(errorHandler);
